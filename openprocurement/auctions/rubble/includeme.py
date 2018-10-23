@@ -11,6 +11,8 @@ from openprocurement.auctions.core.interfaces import IAuctionManager
 from openprocurement.auctions.core.plugins.awarding.v2_1.adapters import (
     AwardingNextCheckV2_1
 )
+from openprocurement.auctions.core.utils import add_related_processes_views
+from openprocurement.auctions.core.traversal import factory
 
 from openprocurement.auctions.rubble.adapters import (
     AuctionRubbleOtherConfigurator,
@@ -117,3 +119,6 @@ def includeme_financial(config, plugin_map):
     # migrate data
     if plugin_map['migration'] and not os.environ.get('MIGRATION_SKIP'):
         get_evenly_plugins(config, plugin_map['plugins'], 'openprocurement.auctions.rubble.plugins')
+
+    # add related processes views
+    add_related_processes_views(config, '/auctions/{auction_id}', factory)

@@ -20,6 +20,7 @@ from openprocurement.auctions.core.models import (
     ListType,
     Lot,
     Period,
+    RelatedProcess,
     auction_embedded_role,
     calc_auction_end_time,
     dgfCDB2Complaint,
@@ -190,6 +191,7 @@ class Auction(BaseAuction):
     cancellations = ListType(ModelType(Cancellation), default=list())
     complaints = ListType(ModelType(dgfCDB2Complaint), default=list())
     contracts = ListType(ModelType(Contract), default=list())
+    relatedProcesses = ListType(ModelType(RelatedProcess), default=list(), max_size=1)
     dgfID = StringType()
     documents = ListType(ModelType(dgfCDB2Document), default=list())  # All documents and attachments related to the auction.
     enquiryPeriod = ModelType(Period)  # The period during which enquiries may be made and will be answered.
@@ -208,6 +210,13 @@ class Auction(BaseAuction):
             (Allow, '{}_{}'.format(self.owner, self.owner_token), 'edit_auction'),
             (Allow, '{}_{}'.format(self.owner, self.owner_token), 'edit_auction_award'),
             (Allow, '{}_{}'.format(self.owner, self.owner_token), 'upload_auction_documents'),
+            (Allow, '{}_{}'.format(self.owner, self.owner_token), 'create_related_process'),
+            (Allow, '{}_{}'.format(self.owner, self.owner_token), 'edit_related_process'),
+            (Allow, '{}_{}'.format(self.owner, self.owner_token), 'delete_related_process'),
+            (Allow, 'g:concierge', 'create_related_process'),
+            (Allow, 'g:concierge', 'edit_related_process'),
+            (Allow, 'g:concierge', 'delete_related_process'),
+
         ]
 
     def initialize(self):
